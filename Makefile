@@ -1,4 +1,4 @@
-###_*_*_*_*_*_*_*_*_*_*_*_*_Makefile_ft_printf_*_*_*_*_*_*_*_*_*_*_*_*_###
+##_*_*_*_*_*_*_*_*_*_*_*_*_Makefile_ft_printf_*_*_*_*_*_*_*_*_*_*_*_*_###
 ## Pour compiler les bonus, si il y a en a, d/commenter les lignes B_SRCS_FILES,
 ## B_SRCS_DIR, B_SRCS et dans les instructions de la ligne OBJS_FILES,
 ## décommenter $(B_SRCS_FILES:.c=.o)
@@ -91,7 +91,8 @@ obj:
 #main in rule
 pipex:
 	${CC} ${CFLAGS} ${SRCS_FILES} $(OEXEC)
-	@echo "${BONUS_OBJS} ${VIOLET} ${BOLD}\n\n-X-- Pipe executable created --X-\n${END}"
+	@echo "${BONUS_OBJS} ${VIOLET} ${BOLD}\n\n-X-- PIPEX executable created --X-\n${END}"
+	@echo "${BONUS_OBJS} ${GREEN} Use as follow : ${VIOLET} ./pipex ${YELLOW}input_text.txt ${RED}CMD CMD ${YELLOW}output_text.txt \n${white} && ${RED}CAT ${YELLOW}output_text.txt\n${END}"
 
 norm:
 	$(NORMINETTE)
@@ -101,7 +102,7 @@ clean:
 
 fclean:	clean
 	$(RM) $(NAME) $(OBJS_DIR) test pipex
-	@echo "${BONUS_OBJS} ${RED} ${BOLD}\n\nObjects files And possibly bonus objects files are deleted to the archive correctly\n${END}"
+	@echo "${BONUS_OBJS} ${RED} ${BOLD}\nObjects files And possibly bonus objects files are deleted to the archive correctly\n${END}"
 
 re: fclean all
 

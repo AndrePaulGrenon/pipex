@@ -6,7 +6,7 @@
 /*   By: agrenon <agrenon@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 17:12:51 by agrenon           #+#    #+#             */
-/*   Updated: 2022/02/24 17:17:44 by agrenon          ###   ########.fr       */
+/*   Updated: 2022/02/25 12:46:29 by agrenon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ char	*ft_path(char *cmd, int start, int len, char *env)
 	while (i < lenpath)
 		temp[i++] = cmd[j++];
 	temp[lenpath] = '\0';
-	printf("FULL PATH MAKING : %s\n", temp);
 	return (temp);
 }
 
@@ -53,11 +52,9 @@ char	*ft_give_path(char *cmd, char *env)
 			if (access(full_path, F_OK) == 0)
 			{
 				free(cmd);
-				printf("FULL PATH found: %s\n", full_path);
 				return (full_path);
 			}
 			free(full_path);
-			printf(" Access not found\n");
 			start = i + 1;
 		}	
 		i++;

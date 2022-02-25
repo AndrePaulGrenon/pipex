@@ -6,7 +6,7 @@
 /*   By: agrenon <agrenon@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 17:24:13 by agrenon           #+#    #+#             */
-/*   Updated: 2022/02/24 17:25:34 by agrenon          ###   ########.fr       */
+/*   Updated: 2022/02/25 17:37:42 by agrenon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_find_env(char **env)
 	{
 		while (env[i][j] == ENV[j])
 			j++;
-		if (j == 4)
+		if (j == 5)
 			break ;
 		j = 0;
 		i++;
@@ -53,9 +53,7 @@ char	*ft_prep_cmd(char **argVec, char **env, char *argv, char *fichier)
 	count = ft_find_env(env);
 	flag[0] = NULL;
 	cmd = ft_make_cmd(argv, flag);
-	printf("CMD : %s\n Line ENV %d\n", cmd, count);
 	cmd = ft_give_path(cmd, env[count]);
-	printf("CMD : %s\n", cmd);
 	count = 0;
 	argVec[count++] = cmd;
 	if (flag[0])
@@ -64,6 +62,26 @@ char	*ft_prep_cmd(char **argVec, char **env, char *argv, char *fichier)
 		argVec[count++] = fichier;
 	argVec[count] = NULL;
 	return (cmd);
+}
+
+void	ft_execute_me(int *files, char **argVec, char **env, char *arg)
+{
+	char	*cmd;
+
+	cmd = NULL;
+	close (files[1]);
+	dup2(files[0], 0);
+	cmd = ft_prep_cmd(argVec, env, arg, 0);
+	if (!cmd)
+	{
+		dup2(6, 1);
+		free(argVec[0]);
+		free(argVec[1]);
+		ft_no_cmd(arg, argVec);
+		exit(0);
+	}	
+	execve(cmd, argVec, env);
+	return ;
 }
 
 void	ft_forknpipe(char **argv, char *cmd, char **argVec, char **env)
@@ -82,16 +100,14 @@ void	ft_forknpipe(char **argv, char *cmd, char **argVec, char **env)
 	fk1 = fork();
 	if (fk1 == 0)
 	{
-		close (files[1]);
-		dup2 (files[0], 0);
-		cmd = ft_prep_cmd(argVec, env, argv[3], 0);
-		printf("FIN DU PIPE ------\n\n");
-		execve(cmd, argVec, env);
+		fk1 = open(argv[4], O_WRONLY | O_CREAT, 0777);
+		dup(1);
+		dup2(fk1, 1);
+		ft_execute_me(files, argVec, env, argv[3]);
 	}
 	close (files[0]);
 	close (files[1]);
 	waitpid(fk1, NULL, 0);
 	waitpid(fk0, NULL, 0);
-	printf("\n---------------- PIPE FINI----\n");
 	return ;
 }
