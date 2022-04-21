@@ -13,20 +13,26 @@ SRCS_FILES 		=	ft_fork.c \
 
 INCLUDE_FILES	= 	lib_pipe.h
 
-#B_SRCS_FILES	= 	 \
+B_SRCS_FILES	= 	ft_fork.c \
+					ft_give_path.c \
+					ft_make_cmd.c \
+					pipe.c \
+					ft_here_doc.c \
+					get_next_line.c \
+					get_next_line_utils.c \
 
 ## Nommer les fichiers objets
 OBJS_FILES 	= $(SRCS_FILES:.c=.o) #$(B_SRCS_FILES:.c=.o) # Utilise les noms de fichier de la variable SRCS_FILES et modifie le suffix .c en .o
 
 ### Repertoires ###
 
-SRCS_DIR = srcs/
-#B_SRCS_DIR 	= bonus_srcs/
+SRCS_DIR = pipex_oblig/
+B_SRCS_DIR 	= pipex_bonus/
 OBJS_DIR	= objs/
 INCLUDE_DIR = include/
 
 SRCS 		= $(addprefix $(SRCS_DIR), $(SRCS_FILES))
-#B_SRCS 	= $(addprefix $(B_SRCS_DIR), $(B_SRCS_FILES))
+B_SRCS 		= $(addprefix $(B_SRCS_DIR), $(B_SRCS_FILES))
 OBJS 		= $(addprefix $(OBJS_DIR), $(OBJS_FILES))
 INCLUDE 	= $(addprefix $(INCLUDE_DIR), $(INCLUDE_FILES))
 VPATH 		= $(SRCS_DIR) $(B_SRCS_DIR)
@@ -64,23 +70,20 @@ WHITE		= \033[37m
 
 ###--------------------------## REGLES ##--------------------------###
 
-all: obj $(NAME)
+#all: obj $(NAME)
+all: 
+	${CC} ${CFLAGS} ${SRCS} $(OEXEC)
+	@echo "${BONUS_OBJS} ${VIOLET} ${BOLD}\n\n-X-- PIPEX executable created --X-\n${END}"
+	@echo "${BONUS_OBJS} ${GREEN} Use as follow : ${VIOLET} ./pipex ${YELLOW}input_text.txt ${RED}CMD CMD ${YELLOW}output_text.txt \n${white} && ${RED}CAT ${YELLOW}output_text.txt\n${END}"
 
-$(OBJS_DIR)%.o:%.c
-	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -o $@ -c $< 
+#$(OBJS_DIR)%.o:%.c
+#	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -o $@ -c $< 
 
 #	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -o $@ -c $<   (FAIT DES FICHIERS .o) et la librairie
 	
 $(NAME): $(OBJS)
 	$(AR) $(NAME) $(OBJS)
 	@echo "${OBJS} ${GREEN} ${BOLD}\n\nObjects files are added to the archive libftprintf.a correctly\n${END}"
-
-bonus: ${NAME} ${BONUS_OBJS}
-	@${ARCHIVE} ${NAME} ${BONUS_OBJS}
-	@echo "${BONUS_OBJS} ${GREEN} ${BOLD}\n\nObjects files And bonus objects files are added to the archive libftprintf.a correctly\n${END}"
-
-exec:
-	${CC} ${CFLAGS} -I ${INCLUDE_DIR} -o test ${SRCS}
 
 test: norm
 	${CC} ${FLAGS} -Og -o test ${SRCS_FILES}
@@ -89,10 +92,11 @@ obj:
 	@mkdir -p $(OBJS_DIR)
 
 #main in rule
-pipex:
-	${CC} ${CFLAGS} ${SRCS_FILES} $(OEXEC)
+bonus: 
+	${CC} ${CFLAGS} ${B_SRCS} $(OEXEC)
 	@echo "${BONUS_OBJS} ${VIOLET} ${BOLD}\n\n-X-- PIPEX executable created --X-\n${END}"
-	@echo "${BONUS_OBJS} ${GREEN} Use as follow : ${VIOLET} ./pipex ${YELLOW}input_text.txt ${RED}CMD CMD ${YELLOW}output_text.txt \n${white} && ${RED}CAT ${YELLOW}output_text.txt\n${END}"
+	@echo "${BONUS_OBJS} ${GREEN} Use as follow : ${VIOLET} ./pipex ${YELLOW}input_text.txt ${RED}CMD [...] CMD ${YELLOW}output_text.txt \n${white} && ${RED}CAT ${YELLOW}output_text.txt\n${END}"
+	@echo "\n ${BONUS_OBJ}${GREEN} Or use here_doc: ${VIOLET} ./pipex ${RED}here_doc ${BLUE}EOF ${RED}CMD [...] CMD ${YELLOW}output_text.txt \n${white}${END}"
 
 norm:
 	$(NORMINETTE)
